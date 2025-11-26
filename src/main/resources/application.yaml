@@ -1,0 +1,170 @@
+# ===============================================
+# CẤU HÌNH CHUNG (ÁP DỤNG CHO TẤT CẢ CÁC MÔI TRƯỜNG)
+# ===============================================
+server:
+  port: 8080
+  # Context path cho ứng dụng
+  servlet:
+    context-path: /beverage-business-management
+
+spring:
+  # Chỉ định profile mặc định nếu không có gì được chọn
+  profiles:
+    active: dev
+
+  # -------------------------------------------
+  # CẤU HÌNH SPRING DATA JPA / HIBERNATE (CHUNG)
+  # -------------------------------------------
+  jpa:
+    # Chỉ định phương ngữ (dialect) MySQL
+    database-platform: org.hibernate.dialect.MySQLDialect
+    # QUAN TRỌNG: Luôn dùng Flyway, không để Hibernate tự tạo bảng
+    hibernate:
+      ddl-auto: none
+
+  # -------------------------------------------
+  # CẤU HÌNH FLYWAY (CHUNG)
+  # -------------------------------------------
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true # Tự động tạo bảng schema_version nếu chưa có
+
+  # -------------------------------------------
+  # CẤU HÌNH SPRING MAIL (CHUNG)
+  # -------------------------------------------
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    # Username này sẽ được dùng cho cả 2 môi trường
+    username: nhan223492@student.nctu.edu.vn
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# ===============================================
+# CẤU HÌNH ACTUATOR (CHUNG)
+# ===============================================
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      # Mặc định chỉ expose health và info
+      exposure:
+        include: health,info
+
+---
+
+# ===============================================
+# CẤU HÌNH MÔI TRƯỜNG DEV (PHÁT TRIỂN)
+# ===============================================
+spring:
+  config:
+    activate:
+      on-profile: dev # Kích hoạt khi profile 'dev' chạy
+
+  # -------------------------------------------
+  # CẤU HÌNH DATASOURCE (DEV)
+  # -------------------------------------------
+  datasource:
+    url: jdbc:mysql://localhost:3306/beverage_business_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: root # Mật khẩu cho dev
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # -------------------------------------------
+  # CẤU HÌNH JPA (DEV)
+  # -------------------------------------------
+  jpa:
+    show-sql: true # Hiển thị SQL khi dev
+    properties:
+      hibernate:
+        format_sql: true # Format SQL cho dễ đọc
+
+  # -------------------------------------------
+  # CẤU HÌNH THYMELEAF & DEVTOOLS (DEV)
+  # -------------------------------------------
+  thymeleaf:
+    cache: false # Tắt cache khi dev
+  devtools:
+    livereload:
+      enabled: true # Tự động reload trang
+
+  # -------------------------------------------
+  # CẤU HÌNH SECURITY (DEV)
+  # -------------------------------------------
+  # User/pass mặc định để test nhanh, CHỈ DÙNG CHO DEV
+  security:
+    user:
+      name: admin
+      password: admin123
+
+  # -------------------------------------------
+  # CẤU HÌNH MAIL (DEV)
+  # -------------------------------------------
+  mail:
+    # Lấy mật khẩu từ biến môi trường
+    # Bạn cần set biến này trong môi trường dev của bạn
+    password: ${MAIL_PASSWORD_DEV}
+
+  # -------------------------------------------
+  # CẤU HÌNH ACTUATOR (DEV)
+  # -------------------------------------------
+  management:
+    endpoint:
+      health:
+        show-details: always # Hiển thị chi tiết health check khi dev
+
+---
+
+# ===============================================
+# CẤU HÌNH MÔI TRƯỜNG PROD (SẢN PHẨM)
+# ===============================================
+spring:
+  config:
+    activate:
+      on-profile: prod # Kích hoạt khi profile 'prod' chạy
+
+  # -------------------------------------------
+  # CẤU HÌNH DATASOURCE (PROD)
+  # -------------------------------------------
+  datasource:
+    # URL trỏ đến CSDL production (thay đổi nếu cần)
+    url: jdbc:mysql://localhost:3306/beverage_business_management_prod?useSSL=true&serverTimezone=UTC
+    username: user_prod # Tạo user riêng cho production
+    # LUÔN LUÔN lấy mật khẩu từ biến môi trường, không ghi vào file
+    password: ${DB_PASSWORD_PROD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # -------------------------------------------
+  # CẤU HÌNH JPA (PROD)
+  # -------------------------------------------
+  jpa:
+    show-sql: false # Tắt hiển thị SQL trên production
+    properties:
+      hibernate:
+        format_sql: false # Tắt format SQL
+
+  # -------------------------------------------
+  # CẤU HÌNH THYMELEAF (PROD)
+  # -------------------------------------------
+  thymeleaf:
+    cache: true # BẬT cache Thymeleaf để tăng hiệu năng
+
+  # -------------------------------------------
+  # CẤU HÌNH MAIL (PROD)
+  # -------------------------------------------
+  mail:
+    # Lấy mật khẩu mail production từ biến môi trường
+    password: ${MAIL_PASSWORD_PROD}
+
+  # -------------------------------------------
+  # CẤU HÌNH ACTUATOR (PROD)
+  # -------------------------------------------
+  management:
+    endpoint:
+      health:
+        # Chỉ hiển thị chi tiết khi được xác thực
+        show-details: when-authorized
