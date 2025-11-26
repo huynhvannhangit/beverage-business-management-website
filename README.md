@@ -43,8 +43,8 @@ Dự án được xây dựng trên công nghệ chính là **Java 21** và **Sp
 ### 1. Clone Source Code
 
 ```bash
-git clone https://github.com/huynhvannhangit/beverage-business-management-website.git
-cd beverage-business-management-website
+git clone https://github.com/huynhvannhangit/beverage-business-management.git
+cd beverage-business-management
 ```
 
 ### 2. Cấu hình Cơ sở dữ liệu
@@ -98,9 +98,9 @@ Mọi đóng góp để cải thiện dự án đều được hoan nghênh. Vui
 ## ✉️ Liên Hệ
 
 - **Tên Dự Án**: Website Quản Lý Kinh Doanh Đồ Uống
-- **Link Repository**: [https://github.com/huynhvannhangit/beverage-business-management-website.git](https://github.com/huynhvannhangit/beverage-business-management-website.git)
+- Link Repository: [https://github.com/huynhvannhangit/beverage-business-management.git](https://github.com/huynhvannhangit/beverage-business-management.git)
 - **Tác Giả**: Huỳnh Văn Nhãn
-- **Email Liên Hệ**: nhan223492@student.nctu.edu.vn
+- **Email Liên Hệ**: huynhvannhanwork@gmail.com
 
 ---
 
