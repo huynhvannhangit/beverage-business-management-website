@@ -3,39 +3,33 @@
 # ===============================================
 server:
   port: 8080
-  # Context path cho ứng dụng
   servlet:
-    context-path: /beverage-business-management
+    context-path: /api
 
 spring:
-  # Chỉ định profile mặc định nếu không có gì được chọn
+  application:
+    name: BeverageBusinessManagement
+
   profiles:
     active: dev
 
-  # -------------------------------------------
-  # CẤU HÌNH SPRING DATA JPA / HIBERNATE (CHUNG)
-  # -------------------------------------------
   jpa:
-    # Chỉ định phương ngữ (dialect) MySQL
     database-platform: org.hibernate.dialect.MySQLDialect
-    # QUAN TRỌNG: Luôn dùng Flyway, không để Hibernate tự tạo bảng
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        type:
+          preferred_uuid_jdbc_type: CHAR
 
-  # -------------------------------------------
-  # CẤU HÌNH FLYWAY (CHUNG)
-  # -------------------------------------------
   flyway:
     locations: classpath:db/migration
-    baseline-on-migrate: true # Tự động tạo bảng schema_version nếu chưa có
+    baseline-on-migrate: true
 
-  # -------------------------------------------
-  # CẤU HÌNH SPRING MAIL (CHUNG)
-  # -------------------------------------------
   mail:
     host: smtp.gmail.com
     port: 587
-    # Username này sẽ được dùng cho cả 2 môi trường
     username: nhan223492@student.nctu.edu.vn
     properties:
       mail:
@@ -44,14 +38,10 @@ spring:
           starttls:
             enable: true
 
-# ===============================================
-# CẤU HÌNH ACTUATOR (CHUNG)
-# ===============================================
 management:
   endpoints:
     web:
       base-path: /actuator
-      # Mặc định chỉ expose health và info
       exposure:
         include: health,info
 
@@ -63,59 +53,40 @@ management:
 spring:
   config:
     activate:
-      on-profile: dev # Kích hoạt khi profile 'dev' chạy
+      on-profile: dev
 
-  # -------------------------------------------
-  # CẤU HÌNH DATASOURCE (DEV)
-  # -------------------------------------------
   datasource:
-    url: jdbc:mysql://localhost:3306/beverage_business_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/db_beverage_business_management?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
-    password: root # Mật khẩu cho dev
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  # -------------------------------------------
-  # CẤU HÌNH JPA (DEV)
-  # -------------------------------------------
   jpa:
-    show-sql: true # Hiển thị SQL khi dev
+    show-sql: true
+    open-in-view: true
     properties:
       hibernate:
-        format_sql: true # Format SQL cho dễ đọc
+        format_sql: true
 
-  # -------------------------------------------
-  # CẤU HÌNH THYMELEAF & DEVTOOLS (DEV)
-  # -------------------------------------------
   thymeleaf:
-    cache: false # Tắt cache khi dev
+    cache: false
+
   devtools:
     livereload:
-      enabled: true # Tự động reload trang
+      enabled: true
 
-  # -------------------------------------------
-  # CẤU HÌNH SECURITY (DEV)
-  # -------------------------------------------
-  # User/pass mặc định để test nhanh, CHỈ DÙNG CHO DEV
   security:
     user:
       name: admin
       password: admin123
 
-  # -------------------------------------------
-  # CẤU HÌNH MAIL (DEV)
-  # -------------------------------------------
   mail:
-    # Lấy mật khẩu từ biến môi trường
-    # Bạn cần set biến này trong môi trường dev của bạn
     password: ${MAIL_PASSWORD_DEV}
 
-  # -------------------------------------------
-  # CẤU HÌNH ACTUATOR (DEV)
-  # -------------------------------------------
-  management:
-    endpoint:
-      health:
-        show-details: always # Hiển thị chi tiết health check khi dev
+management:
+  endpoint:
+    health:
+      show-details: always
 
 ---
 
@@ -125,46 +96,28 @@ spring:
 spring:
   config:
     activate:
-      on-profile: prod # Kích hoạt khi profile 'prod' chạy
+      on-profile: prod
 
-  # -------------------------------------------
-  # CẤU HÌNH DATASOURCE (PROD)
-  # -------------------------------------------
   datasource:
-    # URL trỏ đến CSDL production (thay đổi nếu cần)
-    url: jdbc:mysql://localhost:3306/beverage_business_management_prod?useSSL=true&serverTimezone=UTC
-    username: user_prod # Tạo user riêng cho production
-    # LUÔN LUÔN lấy mật khẩu từ biến môi trường, không ghi vào file
+    url: jdbc:mysql://localhost:3306/beverage_business_management_prod?useSSL=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+    username: user_prod
     password: ${DB_PASSWORD_PROD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  # -------------------------------------------
-  # CẤU HÌNH JPA (PROD)
-  # -------------------------------------------
   jpa:
-    show-sql: false # Tắt hiển thị SQL trên production
+    show-sql: false
+    open-in-view: false
     properties:
       hibernate:
-        format_sql: false # Tắt format SQL
+        format_sql: false
 
-  # -------------------------------------------
-  # CẤU HÌNH THYMELEAF (PROD)
-  # -------------------------------------------
   thymeleaf:
-    cache: true # BẬT cache Thymeleaf để tăng hiệu năng
+    cache: true
 
-  # -------------------------------------------
-  # CẤU HÌNH MAIL (PROD)
-  # -------------------------------------------
   mail:
-    # Lấy mật khẩu mail production từ biến môi trường
     password: ${MAIL_PASSWORD_PROD}
 
-  # -------------------------------------------
-  # CẤU HÌNH ACTUATOR (PROD)
-  # -------------------------------------------
-  management:
-    endpoint:
-      health:
-        # Chỉ hiển thị chi tiết khi được xác thực
-        show-details: when-authorized
+management:
+  endpoint:
+    health:
+      show-details: when-authorized
