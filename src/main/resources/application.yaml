@@ -26,6 +26,7 @@ spring:
   flyway:
     locations: classpath:db/migration
     baseline-on-migrate: true
+    enabled: false  # ← THÊM DÒNG NÀY (TẮT Flyway cho tất cả môi trường)
 
   mail:
     host: smtp.gmail.com
@@ -64,6 +65,8 @@ spring:
   jpa:
     show-sql: true
     open-in-view: true
+    hibernate:
+      ddl-auto: update  # ← THÊM DÒNG NÀY (Override cấu hình chung)
     properties:
       hibernate:
         format_sql: true
@@ -107,9 +110,14 @@ spring:
   jpa:
     show-sql: false
     open-in-view: false
+    hibernate:
+      ddl-auto: validate  # ← THÊM DÒNG NÀY (Prod không tự động sửa DB)
     properties:
       hibernate:
         format_sql: false
+
+  flyway:
+    enabled: true  # ← THÊM DÒNG NÀY (BẬT lại Flyway cho Prod)
 
   thymeleaf:
     cache: true
