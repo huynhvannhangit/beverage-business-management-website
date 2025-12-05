@@ -3,7 +3,7 @@ package com.huynhvannhan.beverage_business_management.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import java.util.Set;
                 @Index(name = "idx_account_email", columnList = "email")
         })
 @SQLDelete(sql = "UPDATE accounts SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
+@SQLRestriction("is_deleted = false")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor

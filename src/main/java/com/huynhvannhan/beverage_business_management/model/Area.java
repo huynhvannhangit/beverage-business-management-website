@@ -5,7 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "areas",
         indexes = @Index(name = "idx_area_name", columnList = "name"))
 @SQLDelete(sql = "UPDATE areas SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
+@SQLRestriction("is_deleted = false")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
